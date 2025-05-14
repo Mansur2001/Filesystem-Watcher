@@ -1,3 +1,4 @@
+/// <author> Mansur Yassin
 // FileWatcherViewModel.cs
 using System;
 using System.Collections.ObjectModel;
@@ -9,6 +10,9 @@ using System.Windows.Threading;
 
 namespace FileWatcherApp.ViewModels
 {
+    /// <summary>
+    /// Controls file watching, saving, querying, exporting, and emailing of file events.
+    /// </summary>
     public class FileWatcherViewModel
     {
         private readonly DatabaseManager myDatabaseManager;
@@ -17,8 +21,14 @@ namespace FileWatcherApp.ViewModels
         private FileSystemWatcher myFileSystemWatcher;
         private readonly Dispatcher myDispatcher;
 
+        /// <summary>
+        /// The list of file events shown in the user interface.
+        /// </summary>
         public ObservableCollection<FileEventViewModel> myFileEvents { get; } = new();
 
+        /// <summary>
+        /// Sets up the services needed by the view model.
+        /// </summary>
         public FileWatcherViewModel(DatabaseManager theDatabaseManager, CSVExporter theCsvExporter, EmailService theEmailService, Dispatcher theDispatcher)
         {
             myDatabaseManager = theDatabaseManager;
@@ -27,6 +37,9 @@ namespace FileWatcherApp.ViewModels
             myDispatcher = theDispatcher;
         }
 
+        /// <summary>
+        /// Starts watching the folder for file changes.
+        /// </summary>
         public void StartWatching(string theExtension, string thePath)
         {
             if (!Directory.Exists(thePath))
@@ -48,6 +61,9 @@ namespace FileWatcherApp.ViewModels
             myFileSystemWatcher.Renamed += OnFileRenamed;
         }
 
+        /// <summary>
+        /// Stops the file watcher.
+        /// </summary>
         public void StopWatching()
         {
             if (myFileSystemWatcher != null)
@@ -58,6 +74,9 @@ namespace FileWatcherApp.ViewModels
             }
         }
 
+        /// <summary>
+        /// Saves the current file events to the database.
+        /// </summary>
         public void SaveEventsToDB()
         {
             try
@@ -74,6 +93,9 @@ namespace FileWatcherApp.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets file events from the database using search filters.
+        /// </summary>
         public ObservableCollection<FileEventViewModel> QueryEvents(QueryCriteriaViewModel theCriteriaViewModel)
         {
             var myCriteria = theCriteriaViewModel.myModel;
@@ -82,6 +104,9 @@ namespace FileWatcherApp.ViewModels
                 myEvents.Select(theEvent => new FileEventViewModel(theEvent)));
         }
 
+        /// <summary>
+        /// Saves events from the database to a CSV file.
+        /// </summary>
         public void ExportToCSV(string theFilePath, QueryCriteriaViewModel theCriteriaViewModel)
         {
             try
@@ -96,6 +121,9 @@ namespace FileWatcherApp.ViewModels
             }
         }
 
+        /// <summary>
+        /// Sends a CSV file to an email address.
+        /// </summary>
         public void SendCSVEmail(string theRecipientEmail, string theFilePath)
         {
             try
@@ -109,6 +137,9 @@ namespace FileWatcherApp.ViewModels
             }
         }
 
+        /// <summary>
+        /// Adds a file event to the list when a file is created, modified, or deleted.
+        /// </summary>
         private void OnFileChanged(object theSender, FileSystemEventArgs theEventArgs)
         {
             var myFileEvent = new FileEvent
@@ -123,6 +154,9 @@ namespace FileWatcherApp.ViewModels
             myDispatcher.Invoke(() => myFileEvents.Add(new FileEventViewModel(myFileEvent)));
         }
 
+        /// <summary>
+        /// Adds a file event to the list when a file is renamed.
+        /// </summary>
         private void OnFileRenamed(object theSender, RenamedEventArgs theEventArgs)
         {
             var myFileEvent = new FileEvent
