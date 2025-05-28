@@ -1,0 +1,65 @@
+// src/main/java/com/filewatcherapp/service/EmailService.java
+package com.filewatcherapp.service;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.*;
+import javax.mail.internet.*;
+import java.util.Properties;
+
+/**
+ * Sends emails via SMTP, with optional file attachment.
+ */
+public class EmailService {
+    private final Session session;
+    private final String fromAddress;
+
+    public EmailService(String host, int port, String username, String password, boolean useTls) {
+        this.fromAddress = username;
+        var props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", Boolean.toString(useTls));
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.port", Integer.toString(port));
+
+        session = Session.getInstance(props, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password);
+            }
+        });
+    }
+
+    /**
+     * Send a simple email, with optional attachment.
+     */
+    public void sendEmail(String toAddress,
+                          String subject,
+                          String body,
+                          String attachmentPath) throws MessagingException {
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(fromAddress));
+        message.setRecipients(
+                Message.RecipientType.TO, InternetAddress.parse(toAddress));
+        message.setSubject(subject);
+
+        var multipart = new MimeMultipart();
+
+        // Body part
+        var textPart = new MimeBodyPart();
+        textPart.setText(body);
+        multipart.addBodyPart(textPart);
+
+        // Attachment part
+        if (attachmentPath != null && !attachmentPath.isBlank()) {
+            var filePart = new MimeBodyPart();
+            DataSource source = new FileDataSource(attachmentPath);
+            filePart.setDataHandler(new DataHandler(source));
+            filePart.setFileName(source.getName());
+            multipart.addBodyPart(filePart);
+        }
+
+        message.setContent(multipart);
+        Transport.send(message);
+    }
+}
