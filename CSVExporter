@@ -1,0 +1,37 @@
+// src/main/java/com/filewatcherapp/export/CSVExporter.java
+package com.filewatcherapp.export;
+
+import com.filewatcherapp.models.FileEvent;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
+
+/**
+ * Exports a list of FileEvent objects to a CSV file.
+ */
+public class CSVExporter {
+    /**
+     * Write events to the given file path.
+     * @param events       list of FileEvent
+     * @param outputPath   e.g. "events_export.csv"
+     */
+    public void exportToCsv(List<FileEvent> events, String outputPath) throws IOException {
+        try (var writer = new FileWriter(outputPath);
+             var printer = new CSVPrinter(writer, CSVFormat.DEFAULT
+                     .withHeader("FileName", "Extension", "FilePath", "EventType", "Timestamp"))
+        ) {
+            for (FileEvent e : events) {
+                printer.printRecord(
+                        e.getFileName(),
+                        e.getExtension(),
+                        e.getFilePath(),
+                        e.getEventType(),
+                        e.getTimestamp()
+                );
+            }
+        }
+    }
+}
