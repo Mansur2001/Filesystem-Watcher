@@ -1,0 +1,34 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls.DataGrid"
+        x:Class="FilesystemWatcher.View.QueryForm"
+        Width="900" Height="500"
+        Title="Query Database">
+    <DockPanel LastChildFill="True" Background="White">
+        <StackPanel Margin="16" Spacing="8">
+            <!-- Extension Query Row -->
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="Extension Query:" VerticalAlignment="Center"/>
+                <TextBox Width="120" Text="{Binding Extension}" />
+                <TextBlock Text="(Empty = ALL files in database)" VerticalAlignment="Center" Margin="4,0,0,0"/>
+                <Button Content="Submit" Command="{Binding SubmitCommand}" Margin="12,0,0,0"/>
+            </StackPanel>
+
+            <!-- Data Grid -->
+            <controls:DataGrid ItemsSource="{Binding QueryResults}"
+                               AutoGenerateColumns="False"
+                               IsReadOnly="True"
+                               Height="350"
+                               Margin="0,12,0,0">
+                <controls:DataGrid.Columns>
+                    <controls:DataGridTextColumn Header="ID" Binding="{Binding RowNumber}" Width="60"/>
+                    <controls:DataGridTextColumn Header="Extension" Binding="{Binding Extension}" Width="100"/>
+                    <controls:DataGridTextColumn Header="Filename" Binding="{Binding FileName}" Width="180"/>
+                    <controls:DataGridTextColumn Header="PATH" Binding="{Binding Path}" Width="200"/>
+                    <controls:DataGridTextColumn Header="Event" Binding="{Binding EventType}" Width="100"/>
+                    <controls:DataGridTextColumn Header="Timestamp" Binding="{Binding FormattedTimestamp}" Width="160"/>
+                </controls:DataGrid.Columns>
+            </controls:DataGrid>
+        </StackPanel>
+    </DockPanel>
+</Window>

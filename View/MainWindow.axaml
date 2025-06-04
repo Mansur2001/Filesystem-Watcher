@@ -1,0 +1,16 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="FilesystemWatcher.View.MainWindow"
+        Width="600" Height="400"
+        Title="File Watcher">
+    <StackPanel Margin="16" Spacing="12" Background="White">
+        <TextBlock Text="PATH:"/>
+        <TextBox Width="300"/>
+        <TextBlock Text="Extension:"/>
+        <TextBox Width="100"/>
+        <Button Content="Submit"/>
+        <Button Content="Start"/>
+        <Button Content="Stop"/>
+        <TextBlock Text="File Watcher View:" FontWeight="Bold"/>
+    </StackPanel>
+</Window>
