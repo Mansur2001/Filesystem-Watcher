@@ -1,0 +1,56 @@
+<Window
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="FilesystemWatcher.View.EmailDialog"
+    Title="Send Email"
+    Width="400"
+    Height="300"
+    Background="#1e1e1e"
+    Foreground="White"
+    CanResize="False"
+    WindowStartupLocation="CenterOwner">
+
+    <StackPanel Margin="20" Spacing="12">
+
+        <!-- Recipient -->
+        <TextBlock Text="Recipient Email:"/>
+        <TextBox
+            Name="EmailBox"
+            Background="#2c2c2c"
+            Foreground="White"
+            Watermark="user@example.com"/>
+
+        <!-- Subject -->
+        <TextBlock Text="Email Subject:"/>
+        <TextBox
+            Name="SubjectBox"
+            Background="#2c2c2c"
+            Foreground="White"
+            Watermark="Subject line"/>
+
+        <!-- Attachment -->
+        <TextBlock Text="Attach File:"/>
+        <DockPanel LastChildFill="True">
+            <TextBox
+                Name="AttachmentBox"
+                IsReadOnly="True"
+                Background="#2c2c2c"
+                Foreground="White"
+                Width="260"
+                Watermark="No file selected"/>
+            <Button
+                Content="Browse"
+                Click="OnBrowse"
+                Width="80"
+                Margin="8,0,0,0"
+                DockPanel.Dock="Right"/>
+        </DockPanel>
+
+        <!-- Buttons -->
+        <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button Content="Cancel" Click="OnCancel" Width="80"/>
+            <Button Content="Send"   Click="OnOk"     Width="80"/>
+        </StackPanel>
+
+    </StackPanel>
+</Window>

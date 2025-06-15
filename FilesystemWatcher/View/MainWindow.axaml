@@ -1,0 +1,183 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="FilesystemWatcher.View.MainWindow"
+        Title="File System Watcher"
+        Width="1440" Height="1080"
+        MinWidth="800" MinHeight="600"
+        Background="#1e1e1e">
+
+  <DockPanel>
+
+    <!-- ─── Menu Bar ─────────────────────────────── -->
+    <Menu DockPanel.Dock="Top" Background="#2c2c2c" Foreground="White">
+      <MenuItem Header="_File">
+        <MenuItem Header="_Exit"
+                  Command="{Binding ExitCommand}"
+                  InputGesture="Ctrl+Q"/>
+      </MenuItem>
+
+      <MenuItem Header="_Monitor">
+        <MenuItem Header="_Start"
+                  Command="{Binding StartCommand}"
+                  InputGesture="Ctrl+R"/>
+        <MenuItem Header="_Stop"
+                  Command="{Binding StopCommand}"
+                  InputGesture="Ctrl+T"/>
+      </MenuItem>
+
+      <MenuItem Header="_Database">
+        <MenuItem Header="_Save to Database"
+                  Command="{Binding SaveToDatabaseCommand}"
+                  InputGesture="Ctrl+S"/>
+        <MenuItem Header="_Query Database"
+                  Command="{Binding OpenQueryWindowCommand}"
+                  InputGesture="Ctrl+D"/>
+        <MenuItem Header="Clear All Records"
+                  Command="{Binding ClearDatabaseCommand}"
+                  ToolTip.Tip="Deletes every row from the DB"/>
+      </MenuItem>
+
+      <MenuItem Header="_Export">
+        <MenuItem Header="Export to _CSV"
+                  Command="{Binding ExportToCsvCommand}"
+                  InputGesture="Ctrl+E"/>
+      </MenuItem>
+
+      <MenuItem Header="_Help">
+        <MenuItem Header="_About"
+                  Command="{Binding AboutCommand}"
+                  InputGesture="F1"/>
+      </MenuItem>
+    </Menu>
+    <!-- ─── End Menu Bar ─────────────────────────── -->
+
+    <!-- ─── Toolbar ──────────────────────────────── -->
+    <StackPanel DockPanel.Dock="Top"
+                Orientation="Horizontal"
+                Margin="8"
+                Spacing="10">
+      <Button Command="{Binding StartCommand}" 
+              Content="▶" 
+              ToolTip.Tip="Start Monitoring" 
+              Foreground="White"/>
+      <Button Command="{Binding StopCommand}"  
+              Content="■" 
+              ToolTip.Tip="Stop Monitoring"  
+              Foreground="White"/>
+      <Button Command="{Binding ClearEventsCommand}" 
+              Content="🧹" 
+              ToolTip.Tip="Clear Events" 
+              Foreground="White"/>
+      <Button Command="{Binding OpenQueryWindowCommand}" 
+              Content="🔍" 
+              ToolTip.Tip="Query Database" 
+              Foreground="White"/>
+    </StackPanel>
+    <!-- ─── End Toolbar ─────────────────────────── -->
+
+    <!-- ─── Main Content ─────────────────────────── -->
+    <Grid Margin="10">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>   <!-- Controls -->
+        <RowDefinition Height="*"/>      <!-- Live events -->
+        <RowDefinition Height="Auto"/>   <!-- Status bar -->
+      </Grid.RowDefinitions>
+
+      <!-- ─── Controls Row ────────────────────────── -->
+      <StackPanel Grid.Row="0"
+                  Orientation="Horizontal"
+                  Spacing="12"
+                  VerticalAlignment="Center">
+
+        <!-- Preset Extension Combo -->
+        <TextBlock Text="Extension:" VerticalAlignment="Center" Foreground="White"/>
+        <ComboBox Width="100"
+                  ItemsSource="{Binding AvailableExtensions}"
+                  SelectedItem="{Binding SelectedPresetExtension}"
+                  PlaceholderText="None"
+                  Background="#2c2c2c"
+                  Foreground="White"/>
+
+        <!-- Custom Extension TextBox -->
+        <TextBlock Text="Custom Ext:" VerticalAlignment="Center" Foreground="White"/>
+        <TextBox Width="80"
+                 Text="{Binding CustomExtension}"
+                 Background="#2c2c2c"
+                 Foreground="White"
+                 Watermark=".myext"/>
+
+        <!-- Directory Picker -->
+        <TextBlock Text="Directory:" VerticalAlignment="Center" Foreground="White"/>
+        <TextBox Width="200"
+                 Text="{Binding DirectoryPath}"
+                 Background="#2c2c2c"
+                 Foreground="White"/>
+        <Button Content="Browse..."
+                Command="{Binding BrowseDirectoryCommand}"
+                Background="#3a3a3a"
+                Foreground="White"/>
+
+        <!-- Spacer -->
+        <Rectangle Width="24" Fill="Transparent"/>
+
+        <!-- New File Name -->
+        <TextBlock Text="New File Name:" VerticalAlignment="Center" Foreground="White"/>
+        <TextBox Width="200"
+                 Text="{Binding ManualFileName}"
+                 Background="#2c2c2c"
+                 Foreground="White"/>
+
+        <!-- Create & Save Buttons -->
+        <Button Content="Create File"
+                Command="{Binding CreateFileCommand}"
+                Background="#3a3a3a"
+                Foreground="White"/>
+        <Button Content="Save to Database"
+                Command="{Binding SaveToDatabaseCommand}"
+                ToolTip.Tip="Save all pending events to the database"
+                Background="#3a3a3a"
+                Foreground="White"/>
+
+      </StackPanel>
+      <!-- ─── End Controls Row ────────────────────── -->
+
+      <!-- ─── Live Events List ─────────────────────── -->
+      <ListBox Grid.Row="1"
+               ItemsSource="{Binding FileEvents}"
+               Background="#1e1e1e"
+               Foreground="White"
+               BorderBrush="#444"
+               BorderThickness="1">
+        <ListBox.ItemTemplate>
+          <DataTemplate>
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <TextBlock Text="{Binding RowNumber}"           Width="30"/>
+              <TextBlock Text="{Binding Extension}"           Width="70"/>
+              <TextBlock Text="{Binding FileName}"            Width="140"/>
+              <TextBlock Text="{Binding FilePath}"            Width="220"/>
+              <TextBlock Text="{Binding EventType}"           Width="100"/>
+              <TextBlock Text="{Binding FormattedTimestamp}"  Width="140"/>
+            </StackPanel>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+      <!-- ─── End Live Events List ───────────────── -->
+
+      <!-- ─── Status Bar ───────────────────────────── -->
+      <Border Grid.Row="2"
+              Background="#2c2c2c"
+              BorderBrush="#444"
+              BorderThickness="1"
+              Padding="6,4">
+        <TextBlock Text="{Binding StatusMessage}"
+                   Foreground="White"
+                   FontSize="12"/>
+      </Border>
+      <!-- ─── End Status Bar ───────────────────────── -->
+
+    </Grid>
+    <!-- ─── End Main Content ─────────────────────── -->
+
+  </DockPanel>
+</Window>
+

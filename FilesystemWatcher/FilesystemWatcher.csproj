@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Avalonia" Version="11.3.0" />
+      <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.0" />
+      <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.1.1" />
+      <PackageReference Include="Avalonia.Desktop" Version="11.3.0" />
+      <PackageReference Include="Avalonia.FreeDesktop" Version="11.3.0" />
+      <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="11.3.0" />
+      <PackageReference Include="Avalonia.ReactiveUI" Version="11.3.0" />
+      <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.0" />
+      <PackageReference Include="MessageBox.Avalonia" Version="3.2.0" />
+      <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.0-preview.4.25258.110" />
+      <PackageReference Include="ReactiveUI" Version="20.3.1" />
+      <PackageReference Include="Xaml.Behaviors.Interactivity" Version="11.3.0.10" />
+      <PackageReference Include="Zafiro.Avalonia.Xaml.Interactivity" Version="1.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="App.axaml.cs">
+        <DependentUpon>App.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="View\MainWindow.axaml.cs">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <DependentUpon>MainWindow.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="View\QueryForm.axaml.cs">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <DependentUpon>QueryForm.axaml</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="JetBrains.Platform.Util">
+        <HintPath>..\..\..\Desktop\Rider.app\Contents\lib\ReSharperHost\JetBrains.Platform.Util.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+</Project>

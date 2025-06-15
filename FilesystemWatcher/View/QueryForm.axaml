@@ -1,0 +1,96 @@
+<!-- File: View/QueryForm.axaml -->
+<Window
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  x:Class="FilesystemWatcher.View.QueryForm"
+  Title="Query File Events"
+  Width="1200" Height="800"
+  MinWidth="800" MinHeight="600"
+  CanResize="True"
+  Background="#1e1e1e"
+  Foreground="White"
+  WindowStartupLocation="CenterOwner">
+
+  <Grid Margin="10">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>  <!-- toolbar -->
+      <RowDefinition Height="Auto"/>  <!-- headers -->
+      <RowDefinition Height="*"/>     <!-- results -->
+      <RowDefinition Height="Auto"/>  <!-- bottom buttons -->
+    </Grid.RowDefinitions>
+
+    <!-- 1) Toolbar row -->
+    <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
+      <!-- filters + run/clear -->
+      <TextBlock Text="Extension:" VerticalAlignment="Center"/>
+      <ComboBox Width="100"
+                ItemsSource="{Binding AvailableExtensions}"
+                SelectedItem="{Binding SelectedExtension}"
+                Background="#2c2c2c" Foreground="White"/>
+      <TextBlock Text="Event Type:" VerticalAlignment="Center" Margin="12,0,0,0"/>
+      <ComboBox Width="100"
+                ItemsSource="{Binding AvailableEvents}"
+                SelectedItem="{Binding SelectedEventType}"
+                Background="#2c2c2c" Foreground="White"/>
+      <TextBlock Text="Filename contains:" VerticalAlignment="Center" Margin="12,0,0,0"/>
+      <TextBox Width="200"
+               Text="{Binding FileNameQuery, UpdateSourceTrigger=PropertyChanged}"
+               Background="#2c2c2c" Foreground="White"/>
+
+      <Button Content="Run Query"     Command="{Binding RunQueryCommand}"     Margin="12,0,0,0"/>
+      <Button Content="Clear Filters" Command="{Binding ClearFiltersCommand}" Margin="4,0,0,0"/>
+    </StackPanel>
+
+    <!-- 2) Header row -->
+    <Grid
+      Grid.Row="1"
+      ColumnDefinitions="30,70,140,*,100,160"
+      ColumnSpacing="10"
+      Background="#2c2c2c"
+      Margin="0,0,0,8">
+      <TextBlock Grid.Column="0" Text="#"         FontWeight="Bold"/>
+      <TextBlock Grid.Column="1" Text="Ext"       FontWeight="Bold"/>
+      <TextBlock Grid.Column="2" Text="File Name" FontWeight="Bold"/>
+      <TextBlock Grid.Column="3" Text="Full Path" FontWeight="Bold"/>
+      <TextBlock Grid.Column="4" Text="Event"     FontWeight="Bold"/>
+      <TextBlock Grid.Column="5" Text="Timestamp" FontWeight="Bold"/>
+    </Grid>
+
+    <!-- 3) Results ListBox -->
+    <ListBox
+      Grid.Row="2"
+      ItemsSource="{Binding QueryResults}"
+      Background="#1e1e1e"
+      Foreground="White"
+      BorderBrush="#444"
+      BorderThickness="1"
+      Margin="0,0,0,8">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <Grid ColumnDefinitions="30,70,140,*,100,160"
+                ColumnSpacing="10"
+                Margin="0,2">
+            <TextBlock Grid.Column="0" Text="{Binding RowNumber}"/>
+            <TextBlock Grid.Column="1" Text="{Binding Extension}"/>
+            <TextBlock Grid.Column="2" Text="{Binding FileName}"/>
+            <TextBlock Grid.Column="3" Text="{Binding FilePath}"/>
+            <TextBlock Grid.Column="4" Text="{Binding EventType}"/>
+            <TextBlock Grid.Column="5" Text="{Binding Timestamp}"/>
+          </Grid>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+
+    <!-- 4) Bottom buttons -->
+    <StackPanel
+      Grid.Row="3"
+      Orientation="Horizontal"
+      Spacing="8"
+      HorizontalAlignment="Right">
+      <Button Content="Export CSV" Command="{Binding ExportCsvCommand}" />
+      <Button Content="Email CSV"  Command="{Binding EmailCsvCommand}" />
+      <Button Content="Close"      Click="OnClose"             />
+    </StackPanel>
+  </Grid>
+</Window>
+
